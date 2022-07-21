@@ -51,13 +51,13 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          primary: secondaryColor,
+                          primary: kSecondaryColor,
                         ),
                         onPressed: () {},
                         child: const Text(
                           'Skip',
                           style: TextStyle(
-                            color: blackTextColor,
+                            color: kBlackColor,
                           ),
                         ),
                       ),
@@ -117,7 +117,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                                 );
                                 initialPage = 1;
                               } else {
-                                Navigator.of(context).pushNamed(BoardPage.ID);
+                                Navigator.of(context).pushReplacementNamed(BoardPage.ID);
                               }
                             });
                           },
@@ -126,7 +126,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                             width: 60,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
-                              color: primaryColor,
+                              color: kPrimaryColor,
                             ),
                             child: const Icon(Icons.arrow_forward),
                           ),
@@ -143,7 +143,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                             width: 13,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
-                              color: firstPage ? primaryColor : secondaryColor,
+                              color: firstPage ? kPrimaryColor : kSecondaryColor,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -152,7 +152,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                             width: 13,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
-                              color: secondPage ? primaryColor : secondaryColor,
+                              color: secondPage ? kPrimaryColor : kSecondaryColor,
                             ),
                           ),
                         ],

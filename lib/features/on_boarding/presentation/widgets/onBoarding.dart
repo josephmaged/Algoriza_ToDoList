@@ -28,7 +28,7 @@ class OnBoarding extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: blackTextColor
+                color: kBlackColor
               ),
               textAlign: TextAlign.center,
             ),
@@ -38,7 +38,7 @@ class OnBoarding extends StatelessWidget {
             Text(
               subText!,
               style: const TextStyle(
-                color: lightBlackTextColor,
+                color: kLightBlackColor,
                 fontSize: 16,
               ),
               textAlign: TextAlign.center,

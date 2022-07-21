@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 String? headerTextBoarding1 = 'Get food delivery to your doorstep asap';
 String? subTextBoarding1 = 'We have young and professional delivery team that will bring your food as soon as possible to your doorstep';
