@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_do_list/features/board/presentation/pages/board_page.dart';
 import 'package:to_do_list/features/on_boarding/presentation/pages/onboarding_page.dart';
 import 'package:to_do_list/features/on_boarding/presentation/widgets/onBoarding.dart';
@@ -109,7 +110,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                       child: Center(
                         child: GestureDetector(
                           onTap: () {
-                            setState(() {
+                            setState(() async {
                               if (initialPage == 0) {
                                 controller.nextPage(
                                   duration: const Duration(milliseconds: 300),
@@ -117,6 +118,8 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                                 );
                                 initialPage = 1;
                               } else {
+                                final showOnBoarding = await SharedPreferences.getInstance();
+                                showOnBoarding.setBool('showHome', true);
                                 Navigator.of(context).pushReplacementNamed(BoardPage.ID);
                               }
                             });

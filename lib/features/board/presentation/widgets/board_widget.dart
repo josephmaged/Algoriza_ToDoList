@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_list/config/const.dart';
 import 'package:to_do_list/features/add_task/presentation/pages/add_task_page.dart';
 import 'package:to_do_list/features/board/presentation/widgets/reusable_tab_selector.dart';
+import 'package:to_do_list/features/schedule/presentation/pages/schedule_page.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
 
 class BoardWidget extends StatelessWidget {
@@ -21,7 +23,7 @@ class BoardWidget extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).pushNamed(SchedulePage.ID),
               icon: const Icon(
                 Icons.calendar_month,
                 color: kLightBlackColor,
@@ -29,22 +31,37 @@ class BoardWidget extends StatelessWidget {
             ),
           ],
           shape: const Border(
-            bottom: BorderSide(color: kLightColor,width: 2),
+            bottom: BorderSide(color: kLightColor,width: 1),
           ),
-          bottom: const TabBar(
-            unselectedLabelColor: kLightBlackColor,
-            labelColor: kBlackColor,
-            isScrollable: true,
-            indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(width: 3,color: kPrimaryColor),
-              insets: EdgeInsets.symmetric(horizontal: 16),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: kLightColor,
+                    width: 1
+                  ),
+                )
+              ),
+              child: const TabBar(
+                unselectedLabelColor: kLightBlackColor,
+                labelColor: kBlackColor,
+                isScrollable: true,
+                indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(width: 3,color: kPrimaryColor),
+                  insets: EdgeInsets.symmetric(horizontal: 16),
+                ),
+                tabs: [
+                  ReusableTabSelector(text: "All"),
+                  ReusableTabSelector(text: "Completed"),
+                  ReusableTabSelector(text: "Uncompleted"),
+                  ReusableTabSelector(text: "Favorite"),
+                ],
+              ),
             ),
-            tabs: [
-              ReusableTabSelector(text: "All"),
-              ReusableTabSelector(text: "Completed"),
-              ReusableTabSelector(text: "Uncompleted"),
-              ReusableTabSelector(text: "Favorite"),
-            ],
           ),
         ),
         body: Stack(
