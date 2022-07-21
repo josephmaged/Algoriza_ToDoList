@@ -21,7 +21,7 @@ class ReusableButton extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             primary: kPrimaryColor,
           ),
           onPressed: onPressed,

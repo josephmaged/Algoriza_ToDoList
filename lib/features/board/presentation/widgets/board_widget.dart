@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/config/const.dart';
+import 'package:to_do_list/features/add_task/presentation/pages/add_task_page.dart';
 import 'package:to_do_list/features/board/presentation/widgets/reusable_tab_selector.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
 
 class BoardWidget extends StatelessWidget {
-  BoardWidget({Key? key}) : super(key: key);
+  const BoardWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +23,22 @@ class BoardWidget extends StatelessWidget {
             IconButton(
               onPressed: () {},
               icon: const Icon(
-                Icons.search,
-                color: kLightBlackColor,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.notifications_none,
-                color: kLightBlackColor,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.menu,
+                Icons.calendar_month,
                 color: kLightBlackColor,
               ),
             ),
           ],
+          shape: const Border(
+            bottom: BorderSide(color: kLightColor,width: 2),
+          ),
           bottom: const TabBar(
             unselectedLabelColor: kLightBlackColor,
             labelColor: kBlackColor,
             isScrollable: true,
+            indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(width: 3,color: kPrimaryColor),
+              insets: EdgeInsets.symmetric(horizontal: 16),
+            ),
             tabs: [
               ReusableTabSelector(text: "All"),
               ReusableTabSelector(text: "Completed"),
@@ -55,27 +49,25 @@ class BoardWidget extends StatelessWidget {
         ),
         body: Stack(
           children: [
-            Expanded(
-              child: TabBarView(
-                children: [
-                  Center(
-                    child: Text('Tab 1'),
-                  ),
-                  Center(
-                    child: Text('Tab 2'),
-                  ),
-                  Center(
-                    child: Text('Tab 3'),
-                  ),
-                  Center(
-                    child: Text('Tab 4'),
-                  ),
-                ],
-              ),
+            const TabBarView(
+              children: [
+                Center(
+                  child: Text('Tab 1'),
+                ),
+                Center(
+                  child: Text('Tab 2'),
+                ),
+                Center(
+                  child: Text('Tab 3'),
+                ),
+                Center(
+                  child: Text('Tab 4'),
+                ),
+              ],
             ),
             ReusableButton(
               text: 'Add a task',
-              onPressed: (){},
+              onPressed: () => Navigator.of(context).pushNamed(AddTaskPage.ID),
             ),
           ],
         ),
