@@ -15,7 +15,7 @@ class ReusableButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 10,
-      height: 100,
+      height: 90,
       width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.all(20),

@@ -7,21 +7,21 @@ class ReusableTextForm extends StatelessWidget {
   final String hitText;
   final bool enabled;
   final Widget? suffixIcon;
- // final TextEditingController controller;
+  final TextEditingController controller;
 
   const ReusableTextForm({
     Key? key,
     required this.hitText,
     this.enabled = true,
     this.suffixIcon,
-    //required this.controller
+    required this.controller
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.name,
-     // controller: controller,
+      controller: controller,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20),
         border: OutlineInputBorder(

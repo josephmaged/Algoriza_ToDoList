@@ -2,6 +2,7 @@ import 'package:animated_horizontal_calendar/animated_horizontal_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_list/config/const.dart';
 
+
 class ScheduleWidget extends StatelessWidget {
   const ScheduleWidget({Key? key}) : super(key: key);
 
@@ -30,6 +31,7 @@ class ScheduleWidget extends StatelessWidget {
           Positioned(
             top: 10,
             height: 100,
+            width: MediaQuery.of(context).size.width,
             child: AnimatedHorizontalCalendar(
               tableCalenderIcon: const Icon(Icons.calendar_today),
               date: DateTime.now(),
