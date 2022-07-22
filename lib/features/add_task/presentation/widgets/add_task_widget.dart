@@ -9,14 +9,11 @@ import 'package:to_do_list/features/add_task/presentation/widgets/reusable_text.
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_text_form.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
 
-class AddTaskWidget extends StatefulWidget {
+final _formKey = GlobalKey<FormState>();
+
+class AddTaskWidget extends StatelessWidget {
   const AddTaskWidget({Key? key}) : super(key: key);
 
-  @override
-  State<AddTaskWidget> createState() => _AddTaskWidgetState();
-}
-
-class _AddTaskWidgetState extends State<AddTaskWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppStates>(
@@ -39,154 +36,173 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
               bottom: BorderSide(color: kLightColor, width: 2),
             ),
           ),
-          body: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ReusableText(
-                          text: 'Title',
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        ReusableTextForm(
-                          controller: AppBloc.get(context).titleController,
-                          hitText: 'Task Title',
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const ReusableText(text: 'Date'),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            AppBloc.get(context).date(context);
-                          },
-                          child: ReusableTextForm(
-                            controller: AppBloc.get(context).dateController,
-                            hitText: AppBloc.get(context).selectedDateString,
-                            enabled: false,
-                            suffixIcon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: kLightBlackColor,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Form(
+              key: _formKey,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const ReusableText(text: 'Start Time'),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      AppBloc.get(context).selectStartTime(context);
-                                    },
-                                    child: ReusableTextForm(
-                                      controller: AppBloc.get(context).startTimeController,
-                                      hitText: AppBloc.get(context).selectedStartTime.format(context),
-                                      enabled: false,
-                                      suffixIcon: const Icon(
-                                        Icons.access_time_rounded,
-                                        color: kLightBlackColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            const ReusableText(text: 'Title'),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ReusableTextForm(
+                              controller: AppBloc.get(context).titleController,
+                              hitText: 'Task Title',
+                              validator: (string) {
+                                if (string == null || string.isEmpty) {
+                                  return 'Please enter Task Title';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const ReusableText(text: 'Date'),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                AppBloc.get(context).date(context);
+                              },
+                              child: ReusableTextForm(
+                                controller: AppBloc.get(context).dateController,
+                                hitText: AppBloc.get(context).selectedDateString,
+                                enabled: false,
+                                suffixIcon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: kLightBlackColor,
+                                ),
                               ),
                             ),
                             const SizedBox(
-                              width: 20,
+                              height: 20,
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const ReusableText(text: 'End Time'),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      AppBloc.get(context).selectEndTime(context);
-                                    },
-                                    child: ReusableTextForm(
-                                      controller: AppBloc.get(context).endTimeController,
-                                      hitText: AppBloc.get(context).selectedEndTime.format(context),
-                                      enabled: false,
-                                      suffixIcon: const Icon(
-                                        Icons.access_time_rounded,
-                                        color: kLightBlackColor,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const ReusableText(text: 'Start Time'),
+                                      const SizedBox(
+                                        height: 10,
                                       ),
-                                    ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          AppBloc.get(context).selectStartTime(context);
+                                        },
+                                        child: ReusableTextForm(
+                                          controller: AppBloc.get(context).startTimeController,
+                                          hitText: AppBloc.get(context).selectedStartTime.format(context),
+                                          enabled: false,
+                                          suffixIcon: const Icon(
+                                            Icons.access_time_rounded,
+                                            color: kLightBlackColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const ReusableText(text: 'End Time'),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          AppBloc.get(context).selectEndTime(context);
+                                        },
+                                        child: ReusableTextForm(
+                                          controller: AppBloc.get(context).endTimeController,
+                                          hitText: AppBloc.get(context).selectedEndTime.format(context),
+                                          enabled: false,
+                                          suffixIcon: const Icon(
+                                            Icons.access_time_rounded,
+                                            color: kLightBlackColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const ReusableText(text: 'Remind'),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ReusableDropDown(
+                              hint: Text(AppBloc.get(context).reminderController),
+                              value: AppBloc.get(context).reminderController,
+                              items: remindItems,
+                              onChanged: (String? newValue) {
+                                AppBloc.get(context).selectRemind(context);
+                                AppBloc.get(context).reminderController = newValue!;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const ReusableText(text: 'Repeat'),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ReusableDropDown(
+                              hint: Text(AppBloc.get(context).repeatController),
+                              value: AppBloc.get(context).repeatController,
+                              items: repeatItems,
+                              onChanged: (String? newValue) {
+                                AppBloc.get(context).selectRepeat(context);
+                                AppBloc.get(context).repeatController = newValue!;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 80,
                             )
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const ReusableText(text: 'Remind'),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        ReusableDropDown(
-                          hint: Text(AppBloc.get(context).reminderController),
-                          value: AppBloc.get(context).reminderController,
-                          items: remindItems,
-                          onChanged: (String? newValue) {
-                            AppBloc.get(context).selectRemind(context);
-                            AppBloc.get(context).reminderController = newValue!;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const ReusableText(text: 'Repeat'),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        ReusableDropDown(
-                          hint: Text(AppBloc.get(context).repeatController),
-                          value: AppBloc.get(context).repeatController,
-                          items: repeatItems,
-                          onChanged: (String? newValue) {
-                            AppBloc.get(context).selectRepeat(context);
-                            AppBloc.get(context).repeatController = newValue!;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 80,
-                        )
-                      ],
+                      ),
                     ),
-                  ),
+                    ReusableButton(
+                      text: 'Create a Task',
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Processing Data')),
+                          );
+                          AppBloc.get(context).insertTodoData();
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                ReusableButton(
-                  text: 'Create a Task',
-                  onPressed: () {},
-                ),
-              ],
+              ),
             ),
           ),
         );

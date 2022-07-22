@@ -10,7 +10,7 @@ class AppBloc extends Cubit<AppStates> {
 
   static AppBloc get(context) => BlocProvider.of<AppBloc>(context);
 
-  late Database database;
+  Database? database;
 
   void initDatabase() async {
     var databasePath = await getDatabasesPath();
@@ -25,7 +25,7 @@ class AppBloc extends Cubit<AppStates> {
   void openAppDatabase({required String path}) async {
     openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(
-          'CREATE TABLE todo (id INTEGER PRIMARY KEY, title TEXT, date INTEGER, startTime INTEGER, endTime INTEGER, reminder TEXT, repeat TEXT');
+          'CREATE TABLE todo (id INTEGER PRIMARY KEY, title TEXT, date TEXT, startTime TEXT, endTime TEXT, reminder TEXT, repeat TEXT)');
     }, onOpen: (Database db) {
       database = db;
     });
@@ -39,9 +39,9 @@ class AppBloc extends Cubit<AppStates> {
   String repeatController = "Never";
 
   void insertTodoData() {
-    database.transaction((txn) async {
+    database?.transaction((txn) async {
       txn.rawInsert(
-          'INSERT INTO todo(title, date, startTime, endTime, reminder, repeat VALUES ("${toBeginningOfSentenceCase(titleController.text)}", "${dateController.text}", "${startTimeController.text}", "${endTimeController.text}", "$reminderController", "$repeatController")');
+          'INSERT INTO todo VALUES ("${toBeginningOfSentenceCase(titleController.text)}", "${dateController.text}", "${startTimeController.text}", "${endTimeController.text}", "$reminderController", "$repeatController")');
     }).then((value) {
       titleController.clear();
       dateController.clear();
@@ -59,7 +59,7 @@ class AppBloc extends Cubit<AppStates> {
   void getTodoData() async {
     emit(AppDatabaseLoading());
 
-    database.rawQuery('SELECT * FROM todo').then((value) {
+    database?.rawQuery('SELECT * FROM todo').then((value) {
       todo = value;
       emit(AppDatabaseTodo());
     });

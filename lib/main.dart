@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AppBloc>(create: (context) => AppBloc()),
+        BlocProvider<AppBloc>(
+          create: (context) => AppBloc()..initDatabase(),
+        ),
       ],
       child: MaterialApp(
         title: 'To-Do List',
