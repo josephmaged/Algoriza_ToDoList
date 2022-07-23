@@ -9,20 +9,12 @@ import 'package:to_do_list/features/schedule/presentation/pages/schedule_page.da
 import 'core/util/bloc/app/cubit.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  final showOnBoarding = await SharedPreferences.getInstance();
-  final showHome = showOnBoarding.getBool('showHome') ?? false;
-
-  runApp(MyApp(
-    showHome: showHome,
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool showHome;
 
-  const MyApp({Key? key, required this.showHome}) : super(key: key);
+  const MyApp({Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +36,7 @@ class MyApp extends StatelessWidget {
           AddTaskPage.ID: (context) => const AddTaskPage(),
           SchedulePage.ID: (context) => const SchedulePage(),
         },
-        home: showHome ? BoardPage() : OnBoardingPage(),
+        home: const BoardPage(),
       ),
     );
   }

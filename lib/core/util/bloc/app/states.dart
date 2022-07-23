@@ -10,4 +10,6 @@ class AppDatabaseLoading extends AppStates {}
 
 class AppDatabaseTodo extends AppStates {}
 
+class AppUpdateTodo extends AppStates {}
+
 class AppDatePicker extends AppStates {}
