@@ -12,4 +12,6 @@ class AppDatabaseTodo extends AppStates {}
 
 class AppUpdateTodo extends AppStates {}
 
+class AppDeleteTodo extends AppStates {}
+
 class AppDatePicker extends AppStates {}

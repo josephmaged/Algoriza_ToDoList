@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,8 +7,11 @@ import 'package:to_do_list/config/const.dart';
 import 'package:to_do_list/core/util/bloc/app/cubit.dart';
 import 'package:to_do_list/core/util/bloc/app/states.dart';
 import 'package:to_do_list/features/add_task/presentation/pages/add_task_page.dart';
+import 'package:to_do_list/features/board/presentation/widgets/all_tasks_screen.dart';
+import 'package:to_do_list/features/board/presentation/widgets/completed_tasks_screen.dart';
+import 'package:to_do_list/features/board/presentation/widgets/favorite_tasks_screen.dart';
 import 'package:to_do_list/features/board/presentation/widgets/reusable_tab_selector.dart';
-import 'package:to_do_list/features/board/presentation/widgets/reusable_task_tile.dart';
+import 'package:to_do_list/features/board/presentation/widgets/uncompleted_tasks_screen.dart';
 import 'package:to_do_list/features/schedule/presentation/pages/schedule_page.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
 
@@ -68,74 +73,24 @@ class BoardWidget extends StatelessWidget {
             ),
             body: Stack(
               children: [
-                TabBarView(
-                  children: [
-                    SizedBox(
-                      height: 500,
-                      width: 150,
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          child: RefreshIndicator(
-                            onRefresh: () async {
-                              AppBloc.get(context).getTodoData();
-                            },
-                            child: ListView.builder(
-                                itemCount: AppBloc.get(context).todoList.length,
-                                itemBuilder: (context, index) => ReusableTaskTile(
-                                      item: AppBloc.get(context).todoList[index],
-                                    )),
-                          )),
-                    ),
-                    SizedBox(
-                      height: 500,
-                      width: 150,
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          child: RefreshIndicator(
-                            onRefresh: () async {
-                              AppBloc.get(context).getTodoData();
-                            },
-                            child: ListView.builder(
-                                itemCount: AppBloc.get(context).completedTodoList.length,
-                                itemBuilder: (context, index) => ReusableTaskTile(
-                                      item: AppBloc.get(context).completedTodoList[index],
-                                    )),
-                          )),
-                    ),
-                    SizedBox(
-                      height: 500,
-                      width: 150,
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          child: RefreshIndicator(
-                            onRefresh: () async {
-                              AppBloc.get(context).getTodoData();
-                            },
-                            child: ListView.builder(
-                                itemCount: AppBloc.get(context).unCompletedTodoList.length,
-                                itemBuilder: (context, index) => ReusableTaskTile(
-                                      item: AppBloc.get(context).unCompletedTodoList[index],
-                                    )),
-                          )),
-                    ),
-                    SizedBox(
-                      height: 500,
-                      width: 150,
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          child: RefreshIndicator(
-                            onRefresh: () async {
-                              AppBloc.get(context).getTodoData();
-                              print(AppBloc.get(context).todoList);
-                            },
-                            child: ListView.builder(
-                                itemCount: AppBloc.get(context).favoriteTodoList.length,
-                                itemBuilder: (context, index) => ReusableTaskTile(
-                                      item: AppBloc.get(context).favoriteTodoList[index],
-                                    )),
-                          )),
-                    ),
-                  ],
+                Positioned(
+                  top: 7,
+                  right: 20,
+                  child: Text(
+                    'Swipe left to delete',
+                    style: TextStyle(color: Colors.red,fontSize: 12),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: TabBarView(
+                    children: [
+                      AllTasksScreen(),
+                      CompletedScreen(),
+                      UnCompletedScreen(),
+                      FavoriteScreen(),
+                    ],
+                  ),
                 ),
                 ReusableButton(
                   text: 'Add a task',

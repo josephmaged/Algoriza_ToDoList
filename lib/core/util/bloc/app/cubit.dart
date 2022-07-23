@@ -52,8 +52,11 @@ class AppBloc extends Cubit<AppStates> {
     }).then((value) {
       titleController.clear();
       dateController.clear();
+      selectedDateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
       startTimeController.clear();
+      selectedStartTime = TimeOfDay.now();
       endTimeController.clear();
+      selectedEndTime = TimeOfDay.now();
       reminderController = 'At time of event';
       repeatController = 'Never';
 
@@ -110,9 +113,18 @@ class AppBloc extends Cubit<AppStates> {
     });
   }
 
+  void deleteTodo({required Map todo}) async {
+    await database.rawDelete('DELETE FROM todo WHERE id = ?', [todo['id']]);
+    emit(AppDeleteTodo());
+    getTodoData();
+  }
+
+
+  // Date & Time Picker
+
   TimeOfDay selectedStartTime = TimeOfDay.now();
   TimeOfDay selectedEndTime = TimeOfDay.now();
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime.now().toUtc();
   String selectedDateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   void date(BuildContext context) async {
