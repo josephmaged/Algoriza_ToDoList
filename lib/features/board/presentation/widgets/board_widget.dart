@@ -82,7 +82,7 @@ class BoardWidget extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 15),
                   child: TabBarView(
                     children: [
                       AllTasksScreen(),

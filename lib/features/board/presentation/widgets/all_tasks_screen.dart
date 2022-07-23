@@ -15,11 +15,11 @@ class AllTasksScreen extends StatelessWidget {
       },
       child: AppBloc.get(context).todoList.isEmpty
           ? Center(
-            child: Image.asset(
+              child: Image.asset(
                 'assets/images/no_data.png',
                 width: 200,
               ),
-          )
+            )
           : ListView.builder(
               itemCount: AppBloc.get(context).todoList.length,
               itemBuilder: (context, index) => ReusableTaskTile(

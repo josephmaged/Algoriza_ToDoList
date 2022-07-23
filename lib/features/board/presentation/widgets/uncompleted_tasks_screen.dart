@@ -9,28 +9,22 @@ class UnCompletedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 500,
-      width: 150,
-      child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          child: RefreshIndicator(
-            onRefresh: () async {
-              AppBloc.get(context).getTodoData();
-            },
-            child: AppBloc.get(context).unCompletedTodoList.isEmpty
-                ? Center(
-                    child: Image.asset(
-                      'assets/images/no_data.png',
-                      width: 200,
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: AppBloc.get(context).unCompletedTodoList.length,
-                    itemBuilder: (context, index) => ReusableTaskTile(
-                          item: AppBloc.get(context).unCompletedTodoList[index],
-                        )),
-          )),
+    return RefreshIndicator(
+      onRefresh: () async {
+        AppBloc.get(context).getTodoData();
+      },
+      child: AppBloc.get(context).unCompletedTodoList.isEmpty
+          ? Center(
+              child: Image.asset(
+                'assets/images/no_data.png',
+                width: 200,
+              ),
+            )
+          : ListView.builder(
+              itemCount: AppBloc.get(context).unCompletedTodoList.length,
+              itemBuilder: (context, index) => ReusableTaskTile(
+                    item: AppBloc.get(context).unCompletedTodoList[index],
+                  )),
     );
   }
 }

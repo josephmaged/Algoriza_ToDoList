@@ -40,7 +40,7 @@ class ReusableTaskTile extends StatelessWidget {
         ),
         trailing: IconButton(
           iconSize: 30,
-          icon: item['isFavorite'] == "false" ? Icon(Icons.favorite_border) : Icon(Icons.favorite),
+          icon: item['isFavorite'] == "false" ? const Icon(Icons.favorite_border) : const Icon(Icons.favorite),
           onPressed: () {
             if (item['isFavorite'] == "false") {
               AppBloc.get(context).updateFavoriteTodo(id: item['id'], favStatus: "true");
