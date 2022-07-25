@@ -5,9 +5,12 @@ import 'package:to_do_list/core/util/bloc/app/cubit.dart';
 import 'package:to_do_list/core/util/bloc/app/states.dart';
 import 'package:to_do_list/core/util/bloc/data/dropdown_items.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_drop_down.dart';
+import 'package:to_do_list/features/add_task/presentation/widgets/reusable_picker_text.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_text.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_text_form.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
+
+import 'reusable_color_button.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -47,11 +50,14 @@ class AddTaskWidget extends StatelessWidget {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
                             const ReusableText(text: 'Title'),
                             const SizedBox(
                               height: 10,
@@ -73,19 +79,12 @@ class AddTaskWidget extends StatelessWidget {
                             const SizedBox(
                               height: 10,
                             ),
-                            GestureDetector(
+                            ReusablePickerText(
+                              value: AppBloc.get(context).selectedDateString,
                               onTap: () {
                                 AppBloc.get(context).date(context);
                               },
-                              child: ReusableTextForm(
-                                controller: AppBloc.get(context).dateController,
-                                hitText: AppBloc.get(context).selectedDateString,
-                                enabled: false,
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: kLightBlackColor,
-                                ),
-                              ),
+                              icon: Icons.keyboard_arrow_down,
                             ),
                             const SizedBox(
                               height: 20,
@@ -102,19 +101,12 @@ class AddTaskWidget extends StatelessWidget {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      GestureDetector(
+                                      ReusablePickerText(
+                                        value: AppBloc.get(context).selectedStartTime.format(context),
                                         onTap: () {
                                           AppBloc.get(context).selectStartTime(context);
                                         },
-                                        child: ReusableTextForm(
-                                          controller: AppBloc.get(context).startTimeController,
-                                          hitText: AppBloc.get(context).selectedStartTime.format(context),
-                                          enabled: false,
-                                          suffixIcon: const Icon(
-                                            Icons.access_time_rounded,
-                                            color: kLightBlackColor,
-                                          ),
-                                        ),
+                                        icon: Icons.access_time_rounded,
                                       ),
                                     ],
                                   ),
@@ -131,19 +123,12 @@ class AddTaskWidget extends StatelessWidget {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      GestureDetector(
+                                      ReusablePickerText(
+                                        value: AppBloc.get(context).selectedEndTime.format(context),
                                         onTap: () {
                                           AppBloc.get(context).selectEndTime(context);
                                         },
-                                        child: ReusableTextForm(
-                                          controller: AppBloc.get(context).endTimeController,
-                                          hitText: AppBloc.get(context).selectedEndTime.format(context),
-                                          enabled: false,
-                                          suffixIcon: const Icon(
-                                            Icons.access_time_rounded,
-                                            color: kLightBlackColor,
-                                          ),
-                                        ),
+                                        icon: Icons.access_time_rounded,
                                       ),
                                     ],
                                   ),
@@ -183,7 +168,50 @@ class AddTaskWidget extends StatelessWidget {
                               },
                             ),
                             const SizedBox(
-                              height: 80,
+                              height: 20,
+                            ),
+                            const ReusableText(text: 'Select Task Color'),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                ReusableColorButton(
+                                  iconCondition: AppBloc.get(context).color1IsSelected == false,
+                                  iconColor: const Color(0XFFFF5147),
+                                  onPressed: () {
+                                    AppBloc.get(context).selectColor1();
+                                    AppBloc.get(context).selectedColor = "Color(0XFFFF5147)";
+                                  },
+                                ),
+                                ReusableColorButton(
+                                  iconCondition: AppBloc.get(context).color2IsSelected == false,
+                                  iconColor: const Color(0XFFFF9D42),
+                                  onPressed: () {
+                                    AppBloc.get(context).selectColor2();
+                                    AppBloc.get(context).selectedColor = "Color(0XFFFF9D42)";
+                                  },
+                                ),
+                                ReusableColorButton(
+                                  iconCondition: AppBloc.get(context).color3IsSelected == false,
+                                  iconColor: const Color(0XFFF9C50B),
+                                  onPressed: () {
+                                    AppBloc.get(context).selectColor3();
+                                    AppBloc.get(context).selectedColor = "Color(0XFFF9C50B)";
+                                  },
+                                ),
+                                ReusableColorButton(
+                                  iconCondition: AppBloc.get(context).color4IsSelected == false,
+                                  iconColor: const Color(0XFF42A0FF),
+                                  onPressed: () {
+                                    AppBloc.get(context).selectColor4();
+                                    AppBloc.get(context).selectedColor = "Color(0XFF42A0FF)";
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 100,
                             )
                           ],
                         ),
@@ -192,12 +220,20 @@ class AddTaskWidget extends StatelessWidget {
                     ReusableButton(
                       text: 'Create a Task',
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
+                        if (AppBloc.get(context).selectedStartTimeString != '' ||
+                            AppBloc.get(context).selectedEndTimeString != '' ) {
+                          if (_formKey.currentState!.validate()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Processing Data')),
+                            );
+                            AppBloc.get(context).insertTodoData();
+                          }
+                        } else{
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Data')),
+                            const SnackBar(content: Text('Please make sure to select Start Time And End Time')),
                           );
-                          AppBloc.get(context).insertTodoData();
                         }
+                        print(AppBloc.get(context).todoList);
                       },
                     ),
                   ],

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/config/const.dart';
-import 'package:to_do_list/core/util/bloc/app/cubit.dart';
-import 'package:to_do_list/core/util/bloc/data/dropdown_items.dart';
 
 class ReusableDropDown extends StatelessWidget {
   Widget hint;

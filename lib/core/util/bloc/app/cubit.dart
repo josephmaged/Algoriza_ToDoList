@@ -27,7 +27,9 @@ class AppBloc extends Cubit<AppStates> {
   void openAppDatabase({required String path}) async {
     await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(
-        'CREATE TABLE todo (id INTEGER PRIMARY KEY, title TEXT, date TEXT, startTime TEXT, endTime TEXT, reminder TEXT, repeat TEXT, isCompleted TEXT, isFavorite TEXT)',
+        'CREATE TABLE todo'
+            ' (id INTEGER PRIMARY KEY, title TEXT, date TEXT, startTime TEXT, endTime TEXT, reminder TEXT, repeat TEXT,'
+            ' isCompleted TEXT, isFavorite TEXT, taskColor TEXT)',
       );
     }, onOpen: (Database db) {
       database = db;
@@ -36,26 +38,29 @@ class AppBloc extends Cubit<AppStates> {
   }
 
   TextEditingController titleController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController startTimeController = TextEditingController();
-  TextEditingController endTimeController = TextEditingController();
+ // TextEditingController dateController = TextEditingController();
+  //TextEditingController startTimeController = TextEditingController();
+ // TextEditingController endTimeController = TextEditingController();
   String reminderController = 'At time of event';
   String repeatController = "Never";
   bool isCompleted = false;
   bool isFavorite = false;
+  String selectedColor = 'Color(0XFFFF5147)';
 
   void insertTodoData() {
     database.transaction((txn) async {
       await txn.rawInsert(
-        'INSERT INTO todo(title,date,startTime,endTime,reminder,repeat,isCompleted,isFavorite) VALUES ("${toBeginningOfSentenceCase(titleController.text)}", "${dateController.text}", "${startTimeController.text}", "${endTimeController.text}", "$reminderController", "$repeatController","$isCompleted","$isFavorite")',
+        'INSERT INTO todo(title,date,startTime,endTime,reminder,repeat,isCompleted,isFavorite,taskColor) VALUES'
+            ' ("${toBeginningOfSentenceCase(titleController.text)}", "$selectedDateString", "$selectedStartTimeString",'
+            ' "$selectedEndTimeString", "$reminderController", "$repeatController","$isCompleted","$isFavorite","$selectedColor")',
       );
     }).then((value) {
       titleController.clear();
-      dateController.clear();
+     // dateController.clear();
       selectedDateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      startTimeController.clear();
+      //startTimeController.clear();
       selectedStartTime = TimeOfDay.now();
-      endTimeController.clear();
+      //endTimeController.clear();
       selectedEndTime = TimeOfDay.now();
       reminderController = 'At time of event';
       repeatController = 'Never';
@@ -69,6 +74,7 @@ class AppBloc extends Cubit<AppStates> {
   List<Map> completedTodoList = [];
   List<Map> unCompletedTodoList = [];
   List<Map> favoriteTodoList = [];
+  List<Color> tasksColorList = [];
 
   void getTodoData() async {
     emit(AppDatabaseLoading());
@@ -94,11 +100,20 @@ class AppBloc extends Cubit<AppStates> {
     });
   }
 
+  List<Map> scheduleList = [];
+
+  void getScheduleList() async {
+    await database.rawQuery('SELECT * FROM todo WHERE date = ?', [selectedDateString]).then((value) {
+      scheduleList = value;
+
+      emit(AppGetScheduleList());
+    });
+  }
+
   bool isSelectedCompleted = false;
 
   void updateCompletedTodo({required int id, required String completedStatus}) async {
-    await database.rawUpdate(
-        'UPDATE todo SET isCompleted = ? WHERE id = $id', [completedStatus]).then((value) {
+    await database.rawUpdate('UPDATE todo SET isCompleted = ? WHERE id = $id', [completedStatus]).then((value) {
       getTodoData();
       emit(AppUpdateTodo());
     });
@@ -119,13 +134,66 @@ class AppBloc extends Cubit<AppStates> {
     getTodoData();
   }
 
+  // Select Colors
+  bool color1IsSelected = true;
+  bool color2IsSelected = false;
+  bool color3IsSelected = false;
+  bool color4IsSelected = false;
+
+  void selectColor1() {
+    // color 1 '0XFFFF5147'
+    if (color1IsSelected == false) {
+      color1IsSelected = true;
+      color2IsSelected = false;
+      color3IsSelected = false;
+      color4IsSelected = false;
+    }
+    emit(AppSelectColor());
+  }
+  void selectColor2() {
+    // color 2 '0XFFFF9D42'
+    if (color2IsSelected == false) {
+      color2IsSelected = true;
+      color1IsSelected = false;
+      color3IsSelected = false;
+      color4IsSelected = false;
+    }
+    emit(AppSelectColor());
+  }
+  void selectColor3() {
+    // color 3 '0XFFF9C50B'
+    if (color3IsSelected == false) {
+      color3IsSelected = true;
+      color2IsSelected = false;
+      color1IsSelected = false;
+      color4IsSelected = false;
+    }
+    emit(AppSelectColor());
+  }
+  void selectColor4() {
+    // color 4 '0XFF42A0FF'
+    if (color4IsSelected == false) {
+      color4IsSelected = true;
+      color2IsSelected = false;
+      color3IsSelected = false;
+      color1IsSelected = false;
+    }
+    emit(AppSelectColor());
+  }
+
+  // Schedule initial date
+
+  DateTime scheduleInitDate = DateTime.now();
 
   // Date & Time Picker
 
   TimeOfDay selectedStartTime = TimeOfDay.now();
+  String selectedStartTimeString ='';
   TimeOfDay selectedEndTime = TimeOfDay.now();
+  String selectedEndTimeString = '';
   DateTime selectedDate = DateTime.now().toUtc();
   String selectedDateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
 
   void date(BuildContext context) async {
     final DateTime? dateOfDay = await showDatePicker(
@@ -136,7 +204,7 @@ class AppBloc extends Cubit<AppStates> {
     );
     if (dateOfDay != null && dateOfDay != selectedDate) {
       selectedDate = dateOfDay;
-      AppBloc.get(context).dateController.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+      selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDate);
     }
     emit(AppDatePicker());
   }
@@ -149,7 +217,7 @@ class AppBloc extends Cubit<AppStates> {
     );
     if (timeOfDay != null && timeOfDay != selectedStartTime) {
       selectedStartTime = timeOfDay;
-      AppBloc.get(context).startTimeController.text = selectedStartTime.format(context).toString();
+      selectedStartTimeString = selectedStartTime.format(context);
     }
     emit(AppDatePicker());
   }
@@ -162,7 +230,7 @@ class AppBloc extends Cubit<AppStates> {
     );
     if (timeOfDay != null && timeOfDay != selectedEndTime) {
       selectedEndTime = timeOfDay;
-      AppBloc.get(context).endTimeController.text = selectedEndTime.format(context).toString();
+      selectedEndTimeString = selectedStartTime.format(context);
     }
     emit(AppDatePicker());
   }

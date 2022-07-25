@@ -12,6 +12,7 @@ import 'package:to_do_list/features/board/presentation/widgets/completed_tasks_s
 import 'package:to_do_list/features/board/presentation/widgets/favorite_tasks_screen.dart';
 import 'package:to_do_list/features/board/presentation/widgets/reusable_tab_selector.dart';
 import 'package:to_do_list/features/board/presentation/widgets/uncompleted_tasks_screen.dart';
+import 'package:to_do_list/features/notification/notificaion_api.dart';
 import 'package:to_do_list/features/schedule/presentation/pages/schedule_page.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
 
@@ -34,7 +35,11 @@ class BoardWidget extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () => Navigator.of(context).pushNamed(SchedulePage.ID),
+                  onPressed: () async {
+                    AppBloc.get(context).scheduleInitDate = DateTime.now();
+                    AppBloc.get(context).getScheduleList();
+                     Navigator.of(context).pushNamed(SchedulePage.ID);
+                  },
                   icon: const Icon(
                     Icons.calendar_month,
                     color: kLightBlackColor,
@@ -48,11 +53,14 @@ class BoardWidget extends StatelessWidget {
                 preferredSize: const Size.fromHeight(50),
                 child: Container(
                   height: 50,
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   decoration: const BoxDecoration(
                       border: Border(
-                    top: BorderSide(color: kLightColor, width: 1),
-                  )),
+                        top: BorderSide(color: kLightColor, width: 1),
+                      )),
                   child: const TabBar(
                     unselectedLabelColor: kLightBlackColor,
                     labelColor: kBlackColor,
@@ -78,7 +86,7 @@ class BoardWidget extends StatelessWidget {
                   right: 20,
                   child: Text(
                     'Swipe left to delete',
-                    style: TextStyle(color: Colors.red,fontSize: 12),
+                    style: TextStyle(color: Colors.red, fontSize: 12),
                   ),
                 ),
                 Padding(
@@ -94,7 +102,16 @@ class BoardWidget extends StatelessWidget {
                 ),
                 ReusableButton(
                   text: 'Add a task',
-                  onPressed: () => Navigator.of(context).pushNamed(AddTaskPage.ID),
+                  onPressed:
+                      () /*NotificationApi.showNotifivation(
+                    title: 'test',
+                    body: 'Hello there'
+                  )*/ {
+                    AppBloc.get(context).selectedStartTime = TimeOfDay.now();
+                    AppBloc.get(context).selectedEndTime = TimeOfDay.now();
+                    AppBloc.get(context).selectedDate = DateTime.now().toUtc();
+                    Navigator.of(context).pushNamed(AddTaskPage.ID);
+                  },
                 ),
               ],
             ),

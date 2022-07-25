@@ -10,7 +10,11 @@ class AppDatabaseLoading extends AppStates {}
 
 class AppDatabaseTodo extends AppStates {}
 
+class AppGetScheduleList extends AppStates {}
+
 class AppUpdateTodo extends AppStates {}
+
+class AppSelectColor extends AppStates {}
 
 class AppDeleteTodo extends AppStates {}
 
