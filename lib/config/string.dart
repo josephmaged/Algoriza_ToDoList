@@ -1,7 +1,7 @@
 
-String? headerTextBoarding1 = 'Get food delivery to your doorstep asap';
-String? subTextBoarding1 = 'We have young and professional delivery team that will bring your food as soon as possible to your doorstep';
+String? headerTextBoarding1 = 'Take regular breaks';
+String? subTextBoarding1 = 'It sounds counterintuitive,but taking scheduled breaks can actually help improve concentration.';
 
-String? headerTextBoarding2 = 'Buy Any Food from your favorite restaurant';
-String? subTextBoarding2 = 'We ate constantly adding your favourite restaurant the territory and around your area carefully selected';
+String? headerTextBoarding2 = 'Boost Your Daily Productivity';
+String? subTextBoarding2 = 'Track and limit how much time you\'re spending on tasks';
 

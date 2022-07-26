@@ -94,23 +94,16 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
               left: 0,
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 160,
                 child: Stack(
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(top: 60),
-                      child: Image.asset(
-                        subtract!,
-                        width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 100),
+                      margin: const EdgeInsets.only(bottom: 90),
                       child: Center(
                         child: GestureDetector(
-                          onTap: () {
-                            setState(() async {
+                          onTap: () async {
+                            final showOnBoarding = await SharedPreferences.getInstance();
+                            showOnBoarding.setBool('showHome', true);
+                            setState(() {
                               if (initialPage == 0) {
                                 controller.nextPage(
                                   duration: const Duration(milliseconds: 300),
@@ -118,8 +111,6 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                                 );
                                 initialPage = 1;
                               } else {
-                                final showOnBoarding = await SharedPreferences.getInstance();
-                                showOnBoarding.setBool('showHome', true);
                                 Navigator.of(context).pushReplacementNamed(BoardPage.ID);
                               }
                             });
@@ -137,7 +128,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 120),
+                      margin: const EdgeInsets.only(top: 80),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

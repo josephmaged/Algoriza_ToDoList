@@ -28,7 +28,7 @@ class AppBloc extends Cubit<AppStates> {
     await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(
         'CREATE TABLE todo'
-            ' (id INTEGER PRIMARY KEY, title TEXT, date TEXT, startTime TEXT, endTime TEXT, reminder TEXT, repeat TEXT,'
+            ' (id INTEGER PRIMARY KEY, title TEXT, description TEXT, date TEXT, startTime TEXT, endTime TEXT, reminder TEXT, repeat TEXT,'
             ' isCompleted TEXT, isFavorite TEXT, taskColor TEXT)',
       );
     }, onOpen: (Database db) {
@@ -38,6 +38,7 @@ class AppBloc extends Cubit<AppStates> {
   }
 
   TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
  // TextEditingController dateController = TextEditingController();
   //TextEditingController startTimeController = TextEditingController();
  // TextEditingController endTimeController = TextEditingController();
@@ -50,12 +51,13 @@ class AppBloc extends Cubit<AppStates> {
   void insertTodoData() {
     database.transaction((txn) async {
       await txn.rawInsert(
-        'INSERT INTO todo(title,date,startTime,endTime,reminder,repeat,isCompleted,isFavorite,taskColor) VALUES'
-            ' ("${toBeginningOfSentenceCase(titleController.text)}", "$selectedDateString", "$selectedStartTimeString",'
+        'INSERT INTO todo(title,description,date,startTime,endTime,reminder,repeat,isCompleted,isFavorite,taskColor) VALUES'
+            ' ("${toBeginningOfSentenceCase(titleController.text)}","${descriptionController.text}", "$selectedDateString", "$selectedStartTimeString",'
             ' "$selectedEndTimeString", "$reminderController", "$repeatController","$isCompleted","$isFavorite","$selectedColor")',
       );
     }).then((value) {
       titleController.clear();
+      descriptionController.clear();
      // dateController.clear();
       selectedDateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
       //startTimeController.clear();
@@ -230,7 +232,7 @@ class AppBloc extends Cubit<AppStates> {
     );
     if (timeOfDay != null && timeOfDay != selectedEndTime) {
       selectedEndTime = timeOfDay;
-      selectedEndTimeString = selectedStartTime.format(context);
+      selectedEndTimeString = selectedEndTime.format(context);
     }
     emit(AppDatePicker());
   }

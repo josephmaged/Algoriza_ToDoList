@@ -8,6 +8,7 @@ class ReusableTextForm extends StatelessWidget {
   final bool enabled;
   final Widget? suffixIcon;
   final TextEditingController controller;
+  final TextInputType? textType;
   FormFieldValidator<String>?  validator;
 
   ReusableTextForm({
@@ -16,17 +17,20 @@ class ReusableTextForm extends StatelessWidget {
     this.enabled = true,
     this.suffixIcon,
     required this.controller,
-    this.validator
+    this.validator,
+    required this.textType
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      keyboardType: TextInputType.name,
+      keyboardType: textType,
       controller: controller,
       validator: validator,
+      maxLines: 5,
+      minLines: 1,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,

@@ -12,6 +12,7 @@ class AllTasksScreen extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {
         AppBloc.get(context).getTodoData();
+        print(AppBloc.get(context).todoList);
       },
       child: AppBloc.get(context).todoList.isEmpty
           ? Center(

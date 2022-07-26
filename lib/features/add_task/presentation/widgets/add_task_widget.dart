@@ -8,6 +8,8 @@ import 'package:to_do_list/features/add_task/presentation/widgets/reusable_drop_
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_picker_text.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_text.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_text_form.dart';
+import 'package:to_do_list/features/board/presentation/pages/board_page.dart';
+import 'package:to_do_list/features/notification/notificaion_api.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
 
 import 'reusable_color_button.dart';
@@ -63,11 +65,30 @@ class AddTaskWidget extends StatelessWidget {
                               height: 10,
                             ),
                             ReusableTextForm(
+                              textType: TextInputType.name,
                               controller: AppBloc.get(context).titleController,
                               hitText: 'Task Title',
                               validator: (string) {
                                 if (string == null || string.isEmpty) {
                                   return 'Please enter Task Title';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const ReusableText(text: 'Description'),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ReusableTextForm(
+                              textType: TextInputType.multiline,
+                              controller: AppBloc.get(context).descriptionController,
+                              hitText: 'Task Description',
+                              validator: (string) {
+                                if (string == null || string.isEmpty) {
+                                  return 'Please enter Task Description';
                                 }
                                 return null;
                               },
@@ -221,19 +242,24 @@ class AddTaskWidget extends StatelessWidget {
                       text: 'Create a Task',
                       onPressed: () {
                         if (AppBloc.get(context).selectedStartTimeString != '' ||
-                            AppBloc.get(context).selectedEndTimeString != '' ) {
+                            AppBloc.get(context).selectedEndTimeString != '') {
                           if (_formKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Processing Data')),
                             );
                             AppBloc.get(context).insertTodoData();
+                            Navigator.of(context).pushReplacementNamed(BoardPage.ID);
                           }
-                        } else{
+                          NotificationApi.showNotifivation(
+                            title: AppBloc.get(context).titleController.text,
+                            body: AppBloc.get(context).descriptionController.text,
+                            scheduledDate: DateTime.now().add(Duration(seconds: 15)),
+                          );
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Please make sure to select Start Time And End Time')),
                           );
                         }
-                        print(AppBloc.get(context).todoList);
                       },
                     ),
                   ],
