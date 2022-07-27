@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cf.josephmaged.to_do_list">
 
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"

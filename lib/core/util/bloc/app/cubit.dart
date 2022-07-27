@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:to_do_list/core/util/bloc/app/states.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:to_do_list/core/util/services/notification_service.dart';
 
 class AppBloc extends Cubit<AppStates> {
   AppBloc() : super(AppInitialState());
@@ -28,8 +31,8 @@ class AppBloc extends Cubit<AppStates> {
     await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(
         'CREATE TABLE todo'
-            ' (id INTEGER PRIMARY KEY, title TEXT, description TEXT, date TEXT, startTime TEXT, endTime TEXT, reminder TEXT, repeat TEXT,'
-            ' isCompleted TEXT, isFavorite TEXT, taskColor TEXT)',
+        ' (id INTEGER PRIMARY KEY, title TEXT, description TEXT, date TEXT, startTime TEXT, endTime TEXT, reminder TEXT, repeat TEXT,'
+        ' isCompleted TEXT, isFavorite TEXT, taskColor TEXT)',
       );
     }, onOpen: (Database db) {
       database = db;
@@ -39,33 +42,42 @@ class AppBloc extends Cubit<AppStates> {
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
- // TextEditingController dateController = TextEditingController();
+
+  // TextEditingController dateController = TextEditingController();
   //TextEditingController startTimeController = TextEditingController();
- // TextEditingController endTimeController = TextEditingController();
+  // TextEditingController endTimeController = TextEditingController();
   String reminderController = 'At time of event';
   String repeatController = "Never";
   bool isCompleted = false;
   bool isFavorite = false;
   String selectedColor = 'Color(0XFFFF5147)';
+  DateTime toUTC = DateTime.now();
 
   void insertTodoData() {
     database.transaction((txn) async {
       await txn.rawInsert(
         'INSERT INTO todo(title,description,date,startTime,endTime,reminder,repeat,isCompleted,isFavorite,taskColor) VALUES'
-            ' ("${toBeginningOfSentenceCase(titleController.text)}","${descriptionController.text}", "$selectedDateString", "$selectedStartTimeString",'
-            ' "$selectedEndTimeString", "$reminderController", "$repeatController","$isCompleted","$isFavorite","$selectedColor")',
+        ' ("${toBeginningOfSentenceCase(titleController.text)}","${descriptionController.text}", "$selectedDateString", "$selectedStartTimeString",'
+        ' "$selectedEndTimeString", "$reminderController", "$selectedFrequency","$isCompleted","$isFavorite","$selectedColor")',
       );
     }).then((value) {
-      titleController.clear();
-      descriptionController.clear();
-     // dateController.clear();
-      selectedDateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      //startTimeController.clear();
-      selectedStartTime = TimeOfDay.now();
-      //endTimeController.clear();
-      selectedEndTime = TimeOfDay.now();
-      reminderController = 'At time of event';
-      repeatController = 'Never';
+
+      toUTC = DateTime(
+          selectedDate.year, selectedDate.month, selectedDate.day, selectedStartTime.hour, selectedStartTime.minute);
+
+      var rng = Random();
+      int _randomInt = 0;
+      for (var i = 0; i < 10; i++) {
+        _randomInt = rng.nextInt(100);
+      }
+
+      print(_randomInt);
+      NotificationApi.showNotification(
+        title: titleController.text,
+        body: descriptionController.text,
+        id: _randomInt,
+        scheduledDate: toUTC,
+      );
 
       emit(AppDatabaseTodoCreated());
       getTodoData();
@@ -152,6 +164,7 @@ class AppBloc extends Cubit<AppStates> {
     }
     emit(AppSelectColor());
   }
+
   void selectColor2() {
     // color 2 '0XFFFF9D42'
     if (color2IsSelected == false) {
@@ -162,6 +175,7 @@ class AppBloc extends Cubit<AppStates> {
     }
     emit(AppSelectColor());
   }
+
   void selectColor3() {
     // color 3 '0XFFF9C50B'
     if (color3IsSelected == false) {
@@ -172,6 +186,7 @@ class AppBloc extends Cubit<AppStates> {
     }
     emit(AppSelectColor());
   }
+
   void selectColor4() {
     // color 4 '0XFF42A0FF'
     if (color4IsSelected == false) {
@@ -190,12 +205,11 @@ class AppBloc extends Cubit<AppStates> {
   // Date & Time Picker
 
   TimeOfDay selectedStartTime = TimeOfDay.now();
-  String selectedStartTimeString ='';
+  String selectedStartTimeString = '';
   TimeOfDay selectedEndTime = TimeOfDay.now();
   String selectedEndTimeString = '';
   DateTime selectedDate = DateTime.now().toUtc();
   String selectedDateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
 
   void date(BuildContext context) async {
     final DateTime? dateOfDay = await showDatePicker(
@@ -244,10 +258,34 @@ class AppBloc extends Cubit<AppStates> {
     emit(AppDatePicker());
   }
 
-  String repeatString = "Never";
+/*  String repeatString = "Never";
 
   void selectRepeat(BuildContext context) {
     repeatController = repeatString;
     emit(AppDatePicker());
+  }*/
+
+  // Add to calender
+  Frequency? selectedFrequency;
+
+  void selectFrequency(BuildContext context, Frequency? frequency) {
+    AppBloc.get(context).selectedFrequency = frequency;
+    emit(AppSelectRepeat());
+  }
+
+  Event addEvent({Recurrence? recurrence}) {
+    return Event(
+      title: titleController.text,
+      startDate: DateTime(
+          selectedDate.year, selectedDate.month, selectedDate.day, selectedStartTime.hour, selectedStartTime.minute),
+      endDate: DateTime(
+          selectedDate.year, selectedDate.month, selectedDate.day, selectedStartTime.hour, selectedStartTime.minute),
+      recurrence: Recurrence(
+        frequency: selectedFrequency,
+        endDate: DateTime(
+            selectedDate.year, selectedDate.month, selectedDate.day, selectedEndTime.hour, selectedEndTime.minute),
+      ),
+      description: '',
+    );
   }
 }

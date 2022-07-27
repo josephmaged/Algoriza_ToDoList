@@ -12,7 +12,6 @@ import 'package:to_do_list/features/board/presentation/widgets/completed_tasks_s
 import 'package:to_do_list/features/board/presentation/widgets/favorite_tasks_screen.dart';
 import 'package:to_do_list/features/board/presentation/widgets/reusable_tab_selector.dart';
 import 'package:to_do_list/features/board/presentation/widgets/uncompleted_tasks_screen.dart';
-import 'package:to_do_list/features/notification/notificaion_api.dart';
 import 'package:to_do_list/features/schedule/presentation/pages/schedule_page.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
 

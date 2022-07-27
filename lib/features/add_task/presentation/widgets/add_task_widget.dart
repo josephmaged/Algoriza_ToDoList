@@ -1,15 +1,17 @@
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_list/config/const.dart';
 import 'package:to_do_list/core/util/bloc/app/cubit.dart';
 import 'package:to_do_list/core/util/bloc/app/states.dart';
 import 'package:to_do_list/core/util/bloc/data/dropdown_items.dart';
+import 'package:to_do_list/core/util/services/notification_service.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_drop_down.dart';
+import 'package:to_do_list/features/add_task/presentation/widgets/reusable_frequency.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_picker_text.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_text.dart';
 import 'package:to_do_list/features/add_task/presentation/widgets/reusable_text_form.dart';
 import 'package:to_do_list/features/board/presentation/pages/board_page.dart';
-import 'package:to_do_list/features/notification/notificaion_api.dart';
 import 'package:to_do_list/features/widgets/reusable_button.dart';
 
 import 'reusable_color_button.dart';
@@ -179,15 +181,7 @@ class AddTaskWidget extends StatelessWidget {
                             const SizedBox(
                               height: 10,
                             ),
-                            ReusableDropDown(
-                              hint: Text(AppBloc.get(context).repeatController),
-                              value: AppBloc.get(context).repeatController,
-                              items: repeatItems,
-                              onChanged: (String? newValue) {
-                                AppBloc.get(context).selectRepeat(context);
-                                AppBloc.get(context).repeatController = newValue!;
-                              },
-                            ),
+                            ReusableFrequency(),
                             const SizedBox(
                               height: 20,
                             ),
@@ -247,14 +241,12 @@ class AddTaskWidget extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Processing Data')),
                             );
+
                             AppBloc.get(context).insertTodoData();
+
+                            Add2Calendar.addEvent2Cal(AppBloc.get(context).addEvent());
                             Navigator.of(context).pushReplacementNamed(BoardPage.ID);
                           }
-                          NotificationApi.showNotifivation(
-                            title: AppBloc.get(context).titleController.text,
-                            body: AppBloc.get(context).descriptionController.text,
-                            scheduledDate: DateTime.now().add(Duration(seconds: 15)),
-                          );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Please make sure to select Start Time And End Time')),

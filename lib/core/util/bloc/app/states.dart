@@ -19,3 +19,5 @@ class AppSelectColor extends AppStates {}
 class AppDeleteTodo extends AppStates {}
 
 class AppDatePicker extends AppStates {}
+
+class AppSelectRepeat extends AppStates {}
