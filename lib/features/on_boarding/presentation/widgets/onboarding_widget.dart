@@ -54,7 +54,10 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           primary: kSecondaryColor,
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          final showOnBoarding = await SharedPreferences.getInstance();
+                          showOnBoarding.setBool('showHome', true);
+                        },
                         child: const Text(
                           'Skip',
                           style: TextStyle(

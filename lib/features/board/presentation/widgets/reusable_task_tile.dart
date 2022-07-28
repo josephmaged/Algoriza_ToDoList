@@ -2,11 +2,12 @@ import 'package:animated_horizontal_calendar/utils/color.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_list/config/const.dart';
 import 'package:to_do_list/core/util/bloc/app/cubit.dart';
+import 'package:to_do_list/core/util/model/Task.dart';
 
 class ReusableTaskTile extends StatelessWidget {
-  final Map item;
+  Map<dynamic, dynamic> item = Tasks().toJson();
 
-  const ReusableTaskTile({Key? key, required this.item}) : super(key: key);
+  ReusableTaskTile({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

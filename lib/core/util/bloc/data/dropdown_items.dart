@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 List<DropdownMenuItem<String>> get remindItems {
   List<DropdownMenuItem<String>> menuItems = [
-    const DropdownMenuItem(child: Text("At time of event"), value: "At time of event"),
-    const DropdownMenuItem(child: Text("5 minutes before"), value: "5 minutes before"),
-    const DropdownMenuItem(child: Text("10 minutes before"), value: "10 minutes before"),
-    const DropdownMenuItem(child: Text("15 minutes before"), value: "15 minutes before"),
-    const DropdownMenuItem(child: Text("30 minutes before"), value: "30 minutes before"),
+    const DropdownMenuItem(child: Text("At time of event"), value: "0"),
+    const DropdownMenuItem(child: Text("5 minutes before"), value: "5"),
+    const DropdownMenuItem(child: Text("10 minutes before"), value: "10"),
+    const DropdownMenuItem(child: Text("15 minutes before"), value: "15"),
+    const DropdownMenuItem(child: Text("30 minutes before"), value: "30"),
   ];
   return menuItems;
 }

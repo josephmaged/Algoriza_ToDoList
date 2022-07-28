@@ -166,12 +166,11 @@ class AddTaskWidget extends StatelessWidget {
                               height: 10,
                             ),
                             ReusableDropDown(
-                              hint: Text(AppBloc.get(context).reminderController),
-                              value: AppBloc.get(context).reminderController,
+                              hint: Text(AppBloc.get(context).reminderString),
+                              value: AppBloc.get(context).reminderString,
                               items: remindItems,
                               onChanged: (String? newValue) {
-                                AppBloc.get(context).selectRemind(context);
-                                AppBloc.get(context).reminderController = newValue!;
+                                AppBloc.get(context).selectRemind(context, newValue);
                               },
                             ),
                             const SizedBox(
@@ -241,10 +240,11 @@ class AddTaskWidget extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Processing Data')),
                             );
-
-                            AppBloc.get(context).insertTodoData();
-
-                            Add2Calendar.addEvent2Cal(AppBloc.get(context).addEvent());
+                           AppBloc.get(context).insertTodoData();
+                            // Add2Calendar.addEvent2Cal(AppBloc.get(context).addEvent());
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Reminder set at ${AppBloc.get(context).reminderString}')),
+                            );
                             Navigator.of(context).pushReplacementNamed(BoardPage.ID);
                           }
                         } else {

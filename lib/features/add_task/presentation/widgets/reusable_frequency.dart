@@ -21,7 +21,7 @@ class ReusableFrequency extends StatelessWidget {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<Frequency>(
-          hint: const Text('Select frequency'),
+          hint: const Text('Select Repeat'),
           value: AppBloc.get(context).selectedFrequency,
           style: const TextStyle(
             color: kLightBlackColor,
@@ -42,7 +42,7 @@ class ReusableFrequency extends StatelessWidget {
             );
           }).toList(),
           onChanged: (newValue) {
-            AppBloc.get(context).selectFrequency(context,newValue);
+            AppBloc.get(context).selectFrequency(newValue);
           },
         ),
       ),

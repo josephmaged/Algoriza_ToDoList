@@ -8,6 +8,7 @@ import 'package:to_do_list/core/util/bloc/app/states.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:to_do_list/core/util/model/Task.dart';
 import 'package:to_do_list/core/util/services/notification_service.dart';
 
 class AppBloc extends Cubit<AppStates> {
@@ -46,24 +47,38 @@ class AppBloc extends Cubit<AppStates> {
   // TextEditingController dateController = TextEditingController();
   //TextEditingController startTimeController = TextEditingController();
   // TextEditingController endTimeController = TextEditingController();
-  String reminderController = 'At time of event';
+  //String reminderController = '5';
   String repeatController = "Never";
   bool isCompleted = false;
   bool isFavorite = false;
   String selectedColor = 'Color(0XFFFF5147)';
-  DateTime toUTC = DateTime.now();
+
+  final Tasks _tasks = Tasks();
+
 
   void insertTodoData() {
+    _tasks.title = toBeginningOfSentenceCase(titleController.text);
+    _tasks.description = descriptionController.text;
+    _tasks.date = selectedDateString;
+    _tasks.startTime = selectedStartTimeString;
+    _tasks.endTime = selectedEndTimeString;
+    _tasks.reminder = reminderString;
+    _tasks.repeat = selectedFrequencyString;
+    _tasks.isCompleted = isCompleted;
+    _tasks.isFavorite = isFavorite;
+    _tasks.taskColor = selectedColor;
+
     database.transaction((txn) async {
       await txn.rawInsert(
         'INSERT INTO todo(title,description,date,startTime,endTime,reminder,repeat,isCompleted,isFavorite,taskColor) VALUES'
-        ' ("${toBeginningOfSentenceCase(titleController.text)}","${descriptionController.text}", "$selectedDateString", "$selectedStartTimeString",'
-        ' "$selectedEndTimeString", "$reminderController", "$selectedFrequency","$isCompleted","$isFavorite","$selectedColor")',
+        ' ("${_tasks.title}","${_tasks.description}", "${_tasks.date}", "${_tasks.startTime}",'
+        ' "${_tasks.endTime}", "${_tasks.reminder}", "${_tasks.repeat}","${_tasks.isCompleted}","${_tasks.isFavorite}","${_tasks.taskColor}")',
       );
     }).then((value) {
 
-      toUTC = DateTime(
-          selectedDate.year, selectedDate.month, selectedDate.day, selectedStartTime.hour, selectedStartTime.minute);
+
+      DateTime toUTC = DateTime(
+          selectedDate.year, selectedDate.month, selectedDate.day, selectedStartTime.hour, selectedStartTime.minute - int.parse(reminderString)).toLocal();
 
       var rng = Random();
       int _randomInt = 0;
@@ -73,12 +88,24 @@ class AppBloc extends Cubit<AppStates> {
 
       print(_randomInt);
       NotificationApi.showNotification(
-        title: titleController.text,
-        body: descriptionController.text,
+        title: _tasks.title,
+        body: _tasks.description,
         id: _randomInt,
         scheduledDate: toUTC,
       );
 
+      titleController.clear();
+      descriptionController.clear();
+      // dateController.clear();
+      selectedDateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      //startTimeController.clear();
+      selectedStartTime = TimeOfDay.now();
+      //endTimeController.clear();
+      selectedEndTime = TimeOfDay.now();
+      //reminderController = 'At time of event';
+      repeatController = 'Never';
+
+      print(toUTC);
       emit(AppDatabaseTodoCreated());
       getTodoData();
     });
@@ -251,10 +278,10 @@ class AppBloc extends Cubit<AppStates> {
     emit(AppDatePicker());
   }
 
-  String reminderString = 'At time of event';
+  String reminderString = '0';
 
-  void selectRemind(BuildContext context) {
-    reminderController = reminderString;
+  void selectRemind(BuildContext context, newValue) {
+    reminderString = newValue;
     emit(AppDatePicker());
   }
 
@@ -267,13 +294,15 @@ class AppBloc extends Cubit<AppStates> {
 
   // Add to calender
   Frequency? selectedFrequency;
+  String? selectedFrequencyString;
 
-  void selectFrequency(BuildContext context, Frequency? frequency) {
-    AppBloc.get(context).selectedFrequency = frequency;
+  void selectFrequency(Frequency? frequency) {
+    selectedFrequency = frequency;
+    selectedFrequencyString = selectedFrequency!.name.toString();
     emit(AppSelectRepeat());
   }
 
-  Event addEvent({Recurrence? recurrence}) {
+ /* Event addEvent({Recurrence? recurrence}) {
     return Event(
       title: titleController.text,
       startDate: DateTime(
@@ -287,5 +316,5 @@ class AppBloc extends Cubit<AppStates> {
       ),
       description: '',
     );
-  }
+  }*/
 }
